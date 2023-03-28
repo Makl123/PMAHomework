@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.IO;
 using TMPro;
-using Gyroscope = UnityEngine.InputSystem.Gyroscope;
 
 public class TouchManager : MonoBehaviour
 {
@@ -13,18 +12,13 @@ public class TouchManager : MonoBehaviour
     
         private InputAction touchPositionAction;
         private InputAction touchPressAction;
-
+        
         private string _dataPath;
         private string _textFile;
 
-      
-        private Transform _rawGyroRotation;
-        private float _tempSmoothing;
-
-        //private float _frequency = Gyroscope.current.samplingFrequency;
-
         private TextMeshPro _frequencyText;
-        
+        private Accelerometer _accelerometer;
+
 
 
         private void Awake()
@@ -32,7 +26,6 @@ public class TouchManager : MonoBehaviour
             playerInput = GetComponent<PlayerInput>();
             touchPressAction = playerInput.actions["TouchPress"];
             touchPositionAction = playerInput.actions["TouchPosition"];
-            //InputSystem.EnableDevice(Gyroscope.current);
 
             _dataPath = Application.persistentDataPath + "/Player_Data/";
             _textFile = _dataPath + "Save_Data.txt";
@@ -44,10 +37,9 @@ public class TouchManager : MonoBehaviour
             GetAccelerometerValue();
         }
 
+        
         Vector3 GetAccelerometerValue()
         {
-            Input.gyro.enabled = true;
-            //Gyroscope.current.samplingFrequency = 16;
             Vector3 acc = Vector3.zero;
             float period = 0.0f;
 
@@ -64,15 +56,18 @@ public class TouchManager : MonoBehaviour
 
             return acc;
         }
+        
 
         private void OnEnable()
         {
             touchPressAction.performed += TouchPressed;
+            InputSystem.EnableDevice(Accelerometer.current);
         }
     
         private void OnDisable()
         {
             touchPressAction.performed -= TouchPressed;
+            InputSystem.DisableDevice(Accelerometer.current);
         }
     
         private void TouchPressed(InputAction.CallbackContext context)
@@ -80,8 +75,7 @@ public class TouchManager : MonoBehaviour
             float value = context.ReadValue<float>();
             Debug.Log(value);
             context.ReadValueAsObject();
-            Debug.Log(Input.acceleration.x);
-            Start();
+            MeasureValue();
 
         }
 
@@ -124,12 +118,9 @@ public class TouchManager : MonoBehaviour
            
         }
 
-        private IEnumerator Start()
+        private void MeasureValue()
         {
-            Input.gyro.enabled = true;
             Application.targetFrameRate = 60;
-
-            yield return new WaitForSeconds(2);
 
             print(GetAccelerometerValue());
             
@@ -137,9 +128,5 @@ public class TouchManager : MonoBehaviour
             
             
         }
-
-        
-
-        
         
 }
