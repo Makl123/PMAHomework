@@ -21,12 +21,18 @@ public class TouchManager : MonoBehaviour
         private Transform _rawGyroRotation;
         private float _tempSmoothing;
 
+        //private float _frequency = Gyroscope.current.samplingFrequency;
+
+        private TextMeshPro _frequencyText;
+        
+
 
         private void Awake()
         {
             playerInput = GetComponent<PlayerInput>();
             touchPressAction = playerInput.actions["TouchPress"];
             touchPositionAction = playerInput.actions["TouchPosition"];
+            //InputSystem.EnableDevice(Gyroscope.current);
 
             _dataPath = Application.persistentDataPath + "/Player_Data/";
             _textFile = _dataPath + "Save_Data.txt";
@@ -40,7 +46,8 @@ public class TouchManager : MonoBehaviour
 
         Vector3 GetAccelerometerValue()
         {
-            Input.gyro.enabled = true; 
+            Input.gyro.enabled = true;
+            //Gyroscope.current.samplingFrequency = 16;
             Vector3 acc = Vector3.zero;
             float period = 0.0f;
 
