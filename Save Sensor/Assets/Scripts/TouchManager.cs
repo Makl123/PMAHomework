@@ -18,6 +18,7 @@ public class TouchManager : MonoBehaviour
 
         private TextMeshPro _frequencyText;
         private Accelerometer _accelerometer;
+        
 
 
 
@@ -120,13 +121,27 @@ public class TouchManager : MonoBehaviour
 
         private void MeasureValue()
         {
-            Application.targetFrameRate = 60;
 
-            print(GetAccelerometerValue());
+            print(_accelerometer.acceleration.z);
             
-            //File.WriteAllText(_textFile,$"Value: {0}",GetAccelerometerValue());
-            
+           
             
         }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        // Method 2
+        
+        
+        
+        
+        
+        
         
 }
